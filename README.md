@@ -3,8 +3,10 @@
 </h1>
 
 <h4 align='center'>
-    Managing config data from the environment, similar to [envconfig](https://github.com/kelseyhightower/envconfig)
+    Managing config data from the environment, inspired by envconfig
 </h4>
+
+[envconfig](https://github.com/kelseyhightower/envconfig)
 
 ## Install
 
