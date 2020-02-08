@@ -1,6 +1,6 @@
 import pytest
 
-from envconf import param
+from envconfig import param
 
 
 @pytest.fixture

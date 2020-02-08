@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 
-import param
-from envconf import EnvConfig
+from envconfig import param
+from envconfig import EnvConfig
 
 
 class AppConfig(EnvConfig):
@@ -25,10 +25,7 @@ app.config.from_object(env)
 @app.route("/healthcheck")
 def healthcheck():
     """ Application healthcheck."""
-    return jsonify(
-        version=app.config["VERSION"],
-        environment=app.config["ENV"],
-    )
+    return jsonify(version=app.config["VERSION"], environment=app.config["ENV"],)
 
 
 print(env.HOST)

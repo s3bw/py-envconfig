@@ -2,7 +2,7 @@ from toolz import dissoc
 from toolz import itemfilter
 from dotenv import load_dotenv
 
-from envconf.param import Param
+from envconfig.param import Param
 
 
 def _is_param(item):

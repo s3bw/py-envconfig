@@ -11,7 +11,7 @@
 ## Install
 
 ```
-pip install py-envconf
+pip install py-envconfig
 ```
 
 ## Usage
@@ -30,8 +30,8 @@ ENV=dev
 Then specify your config:
 
 ```python
-from envconf import param
-from envconf import EnvConfig
+from envconfig import param
+from envconfig import EnvConfig
 
 
 class AppConfig(EnvConfig):
@@ -67,6 +67,12 @@ config = AppConfig("./.env")
 ```
 
 ## Development
+
+### Testing
+
+```
+pytest tests/
+```
 
 ### Package and Distributing
 

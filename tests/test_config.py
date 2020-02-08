@@ -1,7 +1,7 @@
 import pytest
 
-from envconf import param
-from envconf import EnvConfig
+from envconfig import param
+from envconfig import EnvConfig
 
 
 class EnvTestConfig(EnvConfig):
