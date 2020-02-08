@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from envconf.param import Param
 
 
-def is_param(item):
+def _is_param(item):
     k, v = item
     return isinstance(v, Param)
 
@@ -13,8 +13,8 @@ def is_param(item):
 class EnvConfigMeta(type):
     def __new__(metacls, cls_name, bases, attrs):
         klass = super().__new__(metacls, cls_name, bases, attrs)
-        # Add all params to klass.opts attribute
-        klass.opts = itemfilter(is_param, attrs)
+        # Add all params to klass.params attribute
+        klass.params = itemfilter(_is_param, attrs)
         return klass
 
 
@@ -26,11 +26,11 @@ class EnvConfig(metaclass=EnvConfigMeta):
 
     def _init_fields(self) -> None:
         remove = []
-        for key, attr in self.opts.items():
+        for key, attr in self.params.items():
             var = attr(key)
             setattr(self, key, var) if var else remove.append(key)
 
-        self.opts = dissoc(self.opts, *remove)
+        self.params = dissoc(self.params, *remove)
 
     def __getitem__(self, name):
         return getattr(self, name)
