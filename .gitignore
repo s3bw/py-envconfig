@@ -1,0 +1,23 @@
+### Python ###
+__pycache__
+/**/*mypy_cache*
+/**/*pytest_cache*
+*.egg-info/
+
+### IDE ###
+.idea
+.vscode
+*.swp
+
+### OSX files ###
+.DS_Store
+
+# Virtualenvs
+env/
+venv/
+
+# Env vars
+.env
+
+# pickled objects
+*.pkl
