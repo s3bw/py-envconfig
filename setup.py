@@ -7,7 +7,7 @@ from setuptools import find_packages
 
 
 HERE = PurePath(__file__).parent
-VERSION_PATH = Path() / HERE / "envconf" / "__version__.py"
+VERSION_PATH = Path() / HERE / "envconfig" / "__version__.py"
 
 
 about = {}
