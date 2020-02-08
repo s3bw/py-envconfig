@@ -1,8 +1,8 @@
-<h1 align='centre'>
+<h1 align='center'>
     py-envconfig ⚙️
 </h1>
 
-<h4 align='centre'>
+<h4 align='center'>
     Managing config data from the environment, similar to [envconfig](https://github.com/kelseyhightower/envconfig)
 </h4>
 
@@ -19,6 +19,9 @@ Set some environment variable, or write a `.env` file.
 ```bash
 HOST=localhost
 PORT=6000
+
+MY_APP_SERVICE=bookings
+RELEASE_NUMBER=12
 ENV=dev
 ```
 
@@ -37,7 +40,7 @@ class AppConfig(EnvConfig):
     PASSWORD = param.Str(override="SECRET_REDIS_PW", required=True)
 
     SERVICE = param.Str(prefix="MY_APP_")
-    VERSION = param.Int(default=1)
+    VERSION = param.Int(override="RELEASE_NUMBER")
     ENV = param.Str(default="prod")
 
 
