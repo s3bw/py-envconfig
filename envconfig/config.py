@@ -1,4 +1,4 @@
-from toolz import dissoc
+from toolz import merge
 from toolz import itemfilter
 from dotenv import load_dotenv
 
@@ -13,8 +13,15 @@ def _is_param(item):
 class EnvConfigMeta(type):
     def __new__(metacls, cls_name, bases, attrs):
         klass = super().__new__(metacls, cls_name, bases, attrs)
+
+        # Construct params from inherited class
+        _params_ = {}
+        for base in bases:
+            if hasattr(base, "params"):
+                _params_ = merge(base.params, _params_)
+
         # Add all params to klass.params attribute
-        klass.params = itemfilter(_is_param, attrs)
+        klass.params = merge(itemfilter(_is_param, attrs), _params_)
         return klass
 
 
@@ -25,12 +32,10 @@ class EnvConfig(metaclass=EnvConfigMeta):
         self._init_fields()
 
     def _init_fields(self) -> None:
-        remove = []
+        """Set self.params as attributes."""
         for key, attr in self.params.items():
             var = attr(key)
-            setattr(self, key, var) if var else remove.append(key)
-
-        self.params = dissoc(self.params, *remove)
+            setattr(self, key, var)
 
     def __getitem__(self, name):
         return getattr(self, name)

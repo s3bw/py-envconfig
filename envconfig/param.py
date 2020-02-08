@@ -1,17 +1,29 @@
 import os
 
+from enum import Enum
+
+
+class Types(Enum):
+    Str = "Str"
+    Int = "Int"
+    Bool = "Bool"
+
+
+def _boolean(value):
+    return str(value).lower() in ["true", "1", "t", "y", "yes"]
+
 
 class Param:
 
     TYPE_MAPPING = {
-        "Int": int,
-        "Str": str,
+        Types.Int: int,
+        Types.Str: str,
     }
 
     def __init__(self, override=None, default=None, required=False, prefix=None):
         self.override = override
         self.prefix = prefix
-        self.default = default if default else ""
+        self.default = default
         self.required = required
 
     def __call__(self, name):
@@ -33,7 +45,34 @@ class Param:
         # TYPE_MAPPING contains a mapping of class name
         # to type this will cast the env var as the type
         # set by the class
-        return self.TYPE_MAPPING[self.__class__.__name__](value)
+        if value is not None:
+            return self._cast_(value)
+
+    def _cast_(self, value):
+        if self == Types.Bool:
+            # Cast to boolean can't be done with
+            # bool() since this returns True on
+            # both bool("true") and bool("false")
+            return _boolean(value)
+        else:
+            return self.TYPE_MAPPING[self](value)
+
+    @property
+    def _type_(self):
+        """Params are represented by their type."""
+        return Types(self.__class__.__name__)
+
+    def __hash__(self):
+        """Allow the param be mapped by type."""
+        return hash(self._type_)
+
+    def __eq__(self, other):
+        """Compare the param by it's type."""
+        return self._type_ == other
+
+
+class Bool(Param):
+    pass
 
 
 class Int(Param):
