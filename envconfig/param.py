@@ -55,16 +55,12 @@ class Param:
             # both bool("true") and bool("false")
             return _boolean(value)
         else:
-            return self.TYPE_MAPPING[self](value)
+            return self.TYPE_MAPPING[self._type_](value)
 
     @property
     def _type_(self):
         """Params are represented by their type."""
         return Types(self.__class__.__name__)
-
-    def __hash__(self):
-        """Allow the param be mapped by type."""
-        return hash(self._type_)
 
     def __eq__(self, other):
         """Compare the param by it's type."""
