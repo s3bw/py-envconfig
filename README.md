@@ -65,3 +65,20 @@ Point to a `.env` file
 ```python
 config = AppConfig("./.env")
 ```
+
+## Development
+
+### Package and Distributing
+
+Create package
+
+```bash
+rm -rf dist/
+python setup.py sdist bdist_wheel
+```
+
+Upload to package index
+
+```bash
+python -m twine upload --repository-url https://upload.pypi.org/legacy/ dist/*
+```
