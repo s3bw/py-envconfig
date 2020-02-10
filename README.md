@@ -66,25 +66,18 @@ Point to a `.env` file
 config = AppConfig("./.env")
 ```
 
-## Development
+### Load Dotenv
 
-### Testing
+Some functionality provided by [dotenv](https://pypi.org/project/python-dotenv/)
 
-```
-pytest tests/
-```
+- Increase verbosity
 
-### Package and Distributing
+    ```python
+    config = AppConfig(verbose=True)
+    ```
 
-Create package
+- Override Env Vars with variables from `.env` specified by path.
 
-```bash
-rm -rf dist/
-python setup.py sdist bdist_wheel
-```
-
-Upload to package index
-
-```bash
-python -m twine upload --repository-url https://upload.pypi.org/legacy/ dist/*
-```
+    ```python
+    configi = AppConfig(override=True)
+    ```

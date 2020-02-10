@@ -1,3 +1,6 @@
+import os
+from unittest.mock import patch
+
 import pytest
 
 from envconfig import param
@@ -38,3 +41,17 @@ def test_inherited_getitem(key, expected):
 
     assert config[key] == expected
     assert getattr(config, key) == expected
+
+
+def test_overrides():
+    env = {"SERVICE_VAR": "booking"}
+    with patch.dict(os.environ, env):
+        config = Inherit("./tests/test.env", override=True)
+    assert config.SERVICE_VAR == "my-app"
+
+
+def test_dont_override():
+    env = {"SERVICE_VAR": "booking"}
+    with patch.dict(os.environ, env):
+        config = Inherit("./tests/test.env")
+    assert config.SERVICE_VAR == "booking"
