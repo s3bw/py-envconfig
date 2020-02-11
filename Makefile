@@ -8,7 +8,7 @@ publish: clean
 
 tag: publish
 	python scripts/wheel_version.py | xargs git tag
-	python scripts/wheel_version.py | xargs -I '{}' git push '{}' origin
+	python scripts/wheel_version.py | xargs git push $1 origin
 
 test:
 	pytest tests/
