@@ -8,6 +8,7 @@ twine = "*"
 pytest = "*"
 flask = "*"
 black = "*"
+wheel-inspect = "*"
 
 [packages]
 toolz = "*"
