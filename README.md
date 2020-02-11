@@ -81,3 +81,11 @@ Some functionality provided by [dotenv](https://pypi.org/project/python-dotenv/)
     ```python
     AppConfig(override=True)
     ```
+
+### Development
+
+To publish package and tag git:
+
+```bash
+make tag
+```
