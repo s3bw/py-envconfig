@@ -73,11 +73,11 @@ Some functionality provided by [dotenv](https://pypi.org/project/python-dotenv/)
 - Increase verbosity
 
     ```python
-    config = AppConfig(verbose=True)
+    AppConfig(verbose=True)
     ```
 
-- Override Env Vars with variables from `.env` specified by path.
+- Override existing env vars with the env vars defined in `.env`.
 
     ```python
-    configi = AppConfig(override=True)
+    AppConfig(override=True)
     ```
