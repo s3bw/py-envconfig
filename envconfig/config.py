@@ -26,9 +26,9 @@ class EnvConfigMeta(type):
 
 
 class EnvConfig(metaclass=EnvConfigMeta):
-    def __init__(self, env_path=None):
+    def __init__(self, env_path=None, override=False, verbose=False):
         self.env_path = env_path
-        load_dotenv(dotenv_path=env_path)
+        load_dotenv(dotenv_path=env_path, override=override, verbose=verbose)
         self._init_fields()
 
     def _init_fields(self) -> None:
