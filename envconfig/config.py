@@ -34,7 +34,12 @@ class EnvConfig(metaclass=EnvConfigMeta):
     def _init_fields(self) -> None:
         """Set self.params as attributes."""
         for key, attr in self.params.items():
-            var = attr(key)
+            try:
+                var = attr(key)
+            except ValueError as err:
+                raise ValueError(
+                    f"Config param '{key}' expected '{attr.type}', received {err}"
+                )
             setattr(self, key, var)
 
     def __getitem__(self, name):

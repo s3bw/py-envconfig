@@ -100,3 +100,14 @@ def test_type_mapping_int(mock_env):
     value = integer("NUMBER")
     assert value == 60
     assert type(value) is int
+
+
+def test_invalid_type_error_int(mock_env):
+    with pytest.raises(ValueError):
+        p = param.Int()
+        value = p("THIS_ONE")
+
+
+def test_param_public_type():
+    integer = param.Int()
+    assert integer.type == "Int"
