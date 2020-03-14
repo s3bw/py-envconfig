@@ -55,3 +55,21 @@ def test_dont_override():
     with patch.dict(os.environ, env):
         config = Inherit("./tests/test.env")
     assert config.SERVICE_VAR == "booking"
+
+
+@pytest.fixture
+def mock_failure(monkeypatch):
+    monkeypatch.setenv("THIS_ONE", "dev")
+
+
+def test_raise_infomative_error(mock_failure):
+    class ErrConf(EnvConfig):
+        THIS_ONE = param.Int(required=True)
+
+    with pytest.raises(ValueError) as err:
+        ErrConf()
+
+    assert (
+        "Config param 'THIS_ONE' expected 'Int', received "
+        "invalid literal for int() with base 10: 'dev'"
+    ) in str(err)

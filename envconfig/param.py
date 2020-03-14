@@ -66,6 +66,11 @@ class Param:
         """Compare the param by it's type."""
         return self._type_ == other
 
+    @property
+    def type(self):
+        """Public type for param represented by it's value."""
+        return self._type_.value
+
 
 class Bool(Param):
     pass
