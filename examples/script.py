@@ -29,7 +29,10 @@ app.config.from_object(env)
 @app.route("/healthcheck")
 def healthcheck():
     """ Application healthcheck."""
-    return jsonify(version=app.config["VERSION"], environment=app.config["ENV"],)
+    return jsonify(
+        version=app.config["VERSION"],
+        environment=app.config["ENV"],
+    )
 
 
 # DefaultAppConfig
@@ -42,7 +45,6 @@ print(env.HOST)
 print(env["HOST"])
 print(env["REMOTE_HOST"])
 print(env["VERSION"])
-
 
 
 app.run(debug=True)

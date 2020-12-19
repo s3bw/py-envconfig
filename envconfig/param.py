@@ -1,25 +1,21 @@
 import os
+from abc import ABC, abstractmethod
 
-from enum import Enum
+from enum import Enum as pyEnum
 
 
-class Types(Enum):
+class Types(pyEnum):
     Str = "Str"
     Int = "Int"
     Bool = "Bool"
+    Enum = "Enum"
 
 
 def _boolean(value):
     return str(value).lower() in ["true", "1", "t", "y", "yes"]
 
 
-class Param:
-
-    TYPE_MAPPING = {
-        Types.Int: int,
-        Types.Str: str,
-    }
-
+class Param(ABC):
     def __init__(self, override=None, default=None, required=False, prefix=None):
         self.override = override
         self.prefix = prefix
@@ -42,20 +38,14 @@ class Param:
             except KeyError:
                 raise KeyError(f"Could not find '{name}' in environment.")
 
-        # TYPE_MAPPING contains a mapping of class name
-        # to type this will cast the env var as the type
-        # set by the class
+        # '_cast_' contains a method to cast to
+        # an appropriate type decide by the class
         if value is not None:
-            return self._cast_(value)
+            return self._cast(value)
 
-    def _cast_(self, value):
-        if self == Types.Bool:
-            # Cast to boolean can't be done with
-            # bool() since this returns True on
-            # both bool("true") and bool("false")
-            return _boolean(value)
-        else:
-            return self.TYPE_MAPPING[self._type_](value)
+    @abstractmethod
+    def _cast(self, value):
+        raise NotImplemented
 
     @property
     def _type_(self):
@@ -73,12 +63,24 @@ class Param:
 
 
 class Bool(Param):
-    pass
+    def _cast(self, value):
+        return _boolean(value)
 
 
 class Int(Param):
-    pass
+    def _cast(self, value):
+        return int(value)
 
 
 class Str(Param):
-    pass
+    def _cast(self, value):
+        return str(value)
+
+
+class Enum(Param):
+    def __init__(self, enum, **kwargs):
+        self.enum = enum
+        super().__init__(**kwargs)
+
+    def _cast(self, value):
+        return self.enum(value)
