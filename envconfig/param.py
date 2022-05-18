@@ -9,6 +9,7 @@ class Types(pyEnum):
     Int = "Int"
     Bool = "Bool"
     Enum = "Enum"
+    Float = "Float"
 
 
 def _boolean(value):
@@ -84,3 +85,8 @@ class Enum(Param):
 
     def _cast(self, value):
         return self.enum(value)
+
+
+class Float(Param):
+    def _cast(self, value):
+        return float(value)
