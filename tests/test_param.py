@@ -143,3 +143,15 @@ def test_invalid_type_error_int(mock_env):
 def test_param_public_type():
     integer = param.Int()
     assert integer.type == "Int"
+
+
+def test_float_public_type():
+    f = param.Float()
+    assert f.type == "Float"
+
+
+def test_float_parse():
+    f = param.Float()
+    value = f("3.141")
+    assert value == 3.141
+    assert type(value) is float
