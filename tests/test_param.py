@@ -21,6 +21,9 @@ def mock_env(monkeypatch):
     monkeypatch.setenv("COLOUR_BLUE", "blue")
     monkeypatch.setenv("COLOUR_YELLOW", "yellow")
     monkeypatch.setenv("FLOAT_CONFIG", "3.141")
+    monkeypatch.setenv("C1_STR", "C1")
+    monkeypatch.setenv("C2_STR", "C2")
+    monkeypatch.setenv("C3_STR", "C3")
 
 
 @pytest.mark.parametrize(
@@ -156,3 +159,39 @@ def test_float_parse(mock_env):
     value = f("FLOAT_CONFIG")
     assert value == 3.141
     assert type(value) is float
+
+
+def test_config_public_type():
+    c = param.Config(None)
+    assert c.type == "Config"
+
+
+def test_config_parse():
+    class C1(EnvConfig):
+        C1_STR = param.Str()
+
+    class C2(EnvConfig):
+        C2_STR = param.Str()
+        C1 = param.Config(C1)
+
+    c2 = C2()
+    assert c2.C2_STR == "C2"
+    assert c2.C1.C1_STR == "C1"
+
+
+def test_config_parse_nested():
+    class C1(EnvConfig):
+        C1_STR = param.Str()
+
+    class C2(EnvConfig):
+        C2_STR = param.Str()
+        C1 = param.Config(C1)
+
+    class C3(EnvConfig):
+        C3_STR = param.Str()
+        C2 = param.Config(C2)
+
+    c3 = C3()
+    assert c3.C3_STR == "C3"
+    assert c3.C2.C2_STR == "C2"
+    assert c3.C2.C1.C1_STR == "C1"
