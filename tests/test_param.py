@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta, timezone
+
 from enum import Enum
 
 import pytest
@@ -21,6 +23,10 @@ def mock_env(monkeypatch):
     monkeypatch.setenv("COLOUR_BLUE", "blue")
     monkeypatch.setenv("COLOUR_YELLOW", "yellow")
     monkeypatch.setenv("FLOAT_CONFIG", "3.141")
+    monkeypatch.setenv("DATETIME", "2022-06-16T18:35:13+12:00")
+    monkeypatch.setenv("DATETIME_2", "2022-06-16 18:35:13")
+    monkeypatch.setenv("DATETIME_2_FORMAT", "%Y-%m-%d %H:%M:%S")
+    monkeypatch.setenv("TIMEDELTA_DAYS", "1")
 
 
 @pytest.mark.parametrize(
@@ -156,3 +162,27 @@ def test_float_parse(mock_env):
     value = f("FLOAT_CONFIG")
     assert value == 3.141
     assert type(value) is float
+
+
+def test_datetime_public_type():
+    d = param.Datetime()
+    assert d.type == "Datetime"
+
+
+def test_datetime_parse():
+    d = param.Datetime()
+    value = d("DATETIME")
+    assert value == datetime(2022, 6, 16, 18, 35, 13, tzinfo=timezone(12))
+
+
+def test_datetime_parse_2():
+    d = param.Datetime()
+    value = d("DATETIME_2")
+    assert value == datetime(2022, 6, 16, 18, 35, 13, tzinfo=timezone(12))
+
+
+def test_timedelta():
+    t = param.Timedelta()
+    value = t("TIMEDELTA")
+    assert value == timedelta(days=1)
+    assert value.total_seconds() == 86400
