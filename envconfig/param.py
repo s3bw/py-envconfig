@@ -1,4 +1,5 @@
 import os
+import pathlib
 from abc import ABC, abstractmethod
 
 from enum import Enum as pyEnum
@@ -9,6 +10,7 @@ class Types(pyEnum):
     Int = "Int"
     Bool = "Bool"
     Enum = "Enum"
+    Path = "Path"
     Float = "Float"
 
 
@@ -90,3 +92,9 @@ class Enum(Param):
 class Float(Param):
     def _cast(self, value):
         return float(value)
+
+
+class Path(Param):
+    def _cast(self, value):
+        path = pathlib.Path(value)
+        return path
