@@ -10,6 +10,7 @@ class Types(pyEnum):
     Bool = "Bool"
     Enum = "Enum"
     Float = "Float"
+    Config = "Config"
 
 
 def _boolean(value):
@@ -90,3 +91,16 @@ class Enum(Param):
 class Float(Param):
     def _cast(self, value):
         return float(value)
+
+
+class Config(Param):
+    def __init__(self, cls, default=None):
+        self.cls = cls
+        self.default = default
+
+    def __call__(self, _name):
+        try:
+            value = self.cls()
+            return value
+        except KeyError:
+            return self.default
