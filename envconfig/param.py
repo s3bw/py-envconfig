@@ -133,16 +133,21 @@ class Datetime(Param):
 
 
 class Timedelta(Param):
-    def __init__(self, units, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
     def __call__(self, name):
+        self.units = name.split('_')[-1].lower()
         value = super().__call__(name)
-        try:
-            converted = int(value)
-        except:
-            converted = float(value)
+        return value
 
-        units = name.split('_')[-1].lower()
-        td = timedelta(**{units: converted})
-        return td
+    def _cast(self, value):
+        if isinstance(value, timedelta):
+            return value
+        else:
+            try:
+                converted = int(value)
+            except:
+                converted = float(value)
+            td = timedelta(**{self.units: converted})
+            return td

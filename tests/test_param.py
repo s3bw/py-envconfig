@@ -183,6 +183,33 @@ def test_datetime_parse_2():
 
 def test_timedelta():
     t = param.Timedelta()
-    value = t("TIMEDELTA")
-    assert value == timedelta(days=1)
+    value = t("TIMEDELTA_DAYS")
     assert value.total_seconds() == 86400
+
+
+def test_timedelta_default_int():
+    t = param.Timedelta(default=7)
+    value = t("TIMEDELTA_NOT_DEFINED_HOURS")
+    assert isinstance(value, timedelta)
+    assert value.total_seconds() = 7 * 24 * 3600
+
+
+def test_timedelta_default_float():
+    t = param.Timedelta(default=7.0)
+    value = t("TIMEDELTA_NOT_DEFINED_MINUTES")
+    assert isinstance(value, timedelta)
+    assert value.total_seconds() == 7.0 * 60
+
+
+def test_timedelta_default_timedelta():
+    t = param.Timedelta(default=timedelta(seconds=30))
+    value = t("TIMEDELTA_NOT_DEFINED_SECONDS")
+    assert isinstance(value, timedelta)
+    assert value.total_seconds() == 30
+
+
+def test_timedelta_default_timedelta_2():
+    t = param.Timedelta(default=timedelta(seconds=30))
+    value = t("TIMEDELTA_NOT_DEFINED_HOURS")
+    assert isinstance(value, timedelta)
+    assert value.total_seconds() == 30
