@@ -1,5 +1,6 @@
 import os
 from abc import ABC, abstractmethod
+from datetime import datetime, timedelta
 
 from enum import Enum as pyEnum
 
@@ -10,6 +11,8 @@ class Types(pyEnum):
     Bool = "Bool"
     Enum = "Enum"
     Float = "Float"
+    Datetime = "Datetime"
+    Timedelta = "Timedelta"
 
 
 def _boolean(value):
@@ -90,3 +93,61 @@ class Enum(Param):
 class Float(Param):
     def _cast(self, value):
         return float(value)
+
+
+class Datetime(Param):
+    def __init__(self, format_suffix: str = "_FORMAT", format_override: str = None, format_default: str = "%Y-%m-%dT%H:%M:%S%z", *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.format_suffix = format_suffix
+        self.format_override = format_override
+        self.format_default = format_default
+
+    def __call__(self, name):
+        # Some environment variables will be prefixed
+        # this will return env var with prefix + name
+        if not self.override:
+            name = self.prefix + name if self.prefix else name
+        else:
+            name = self.override
+
+        if not self.format_override:
+            format_name = name + self.format_suffix
+        else:
+            format_name = self.format_override
+
+        value_format = os.getenv(format_name, self.format_default)
+
+        if name in os.environ:
+            value_str = os.environ[name]
+            value = datetime.strptime(value_str, value_format)
+
+        elif self.required:
+            raise KeyError(f"Could not find '{name}' in environment.")
+
+        elif isinstance(self.default, str):
+            value = datetime.strptime(self.default, value_format)
+        else:
+            value = self.default
+
+        return value
+
+
+class Timedelta(Param):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def __call__(self, name):
+        self.units = name.split('_')[-1].lower()
+        value = super().__call__(name)
+        return value
+
+    def _cast(self, value):
+        if isinstance(value, timedelta):
+            return value
+        else:
+            try:
+                converted = int(value)
+            except:
+                converted = float(value)
+            td = timedelta(**{self.units: converted})
+            return td
