@@ -1,4 +1,5 @@
 from enum import Enum
+from pathlib import Path
 
 import pytest
 
@@ -21,6 +22,7 @@ def mock_env(monkeypatch):
     monkeypatch.setenv("COLOUR_BLUE", "blue")
     monkeypatch.setenv("COLOUR_YELLOW", "yellow")
     monkeypatch.setenv("FLOAT_CONFIG", "3.141")
+    monkeypatch.setenv("PATH_CONFIG", "mock/path")
 
 
 @pytest.mark.parametrize(
@@ -156,3 +158,15 @@ def test_float_parse(mock_env):
     value = f("FLOAT_CONFIG")
     assert value == 3.141
     assert type(value) is float
+
+
+def test_param_public_type():
+    p = param.Path()
+    assert p.type == "Path"
+
+
+def test_path_parse(mock_env):
+    p = param.Path()
+    value = p("PATH_CONFIG")
+    assert value == Path("mock/path")
+    assert type(value) is Path
