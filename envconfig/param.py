@@ -96,5 +96,4 @@ class Float(Param):
 
 class Path(Param):
     def _cast(self, value):
-        path = pathlib.Path(value)
-        return path
+        return pathlib.Path(value)
