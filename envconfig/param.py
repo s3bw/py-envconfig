@@ -22,7 +22,13 @@ class Param(ABC):
     def __init__(self, override=None, default=None, required=False, prefix=None):
         self.override = override
         self.prefix = prefix
-        self.default = default
+
+        if default is not None:
+            # ensure the default value has the same type as the resolved values
+            self.default = self._cast(default)
+        else:
+            self.default = None
+
         self.required = required
 
     def __call__(self, name):
